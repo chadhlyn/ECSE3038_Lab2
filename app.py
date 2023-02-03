@@ -27,10 +27,18 @@ async def create_todo(request: Request):
   fake_database.append(todo)
   return todo
 
-  
 @app.delete("/todos/{id}")
 async def delete_todo(id: int):
     fake_database.pop(id)
     return {"message": "Todo deleted"}
+
+@app.patch("/todos/{id}")
+async def update_todo(id: int, request: Request):
+  for i, todo in enumerate(fake_database):
+    if todo["id"] == id: 
+      updated_todo = await request.json()
+      fake_database[i].update(updated_todo)
+      return {"message": "Todo with id {} was updated.".format(id)}
+  return {"message": "Todo with id {} not found.".format(id)}
   
 
